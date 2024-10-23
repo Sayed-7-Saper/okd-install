@@ -1,0 +1,9 @@
+zone "clync.com" {
+    type master;
+    file "/etc/named/zones/db.clync.com"; # zone file path
+};
+
+zone "16.16.172.in-addr.arpa" {
+    type master;
+    file "/etc/named/zones/db.172.16.16";  # 172.16.16.0/24 subnet
+};
