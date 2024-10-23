@@ -1,0 +1,244 @@
+sudo dnf install -y epel-release
+sudo dnf update -y
+sudo systemctl restart
+
+
+sudo dnf install -y xrdp tigervnc-server
+sudo systemctl enable --now xrxp
+sudo firewall-cmd --zone=public --permanent --add-port=3389/tcp
+sudo firewall-cmd --reload
+
+
+cd
+git clone https://github.com/cragr/okd4_files.git
+cd okd4_files
+
+
+sudo dnf -y install bind bind-utils
+
+
+sudo cp named.conf /etc/named.conf
+sudo cp named.conf.local /etc/named/
+sudo mkdir /etc/named/zones
+sudo cp db* /etc/named/zones
+
+
+sudo systemctl enable named
+sudo systemctl start named
+sudo systemctl status named
+
+
+sudo firewall-cmd --permanent --add-port=53/udp
+sudo firewall-cmd --reload
+
+
+sudo systemctl restart NetworkManager
+
+
+dig okd.local
+dig –x 172.16.16.220
+
+
+sudo dnf install haproxy -y
+
+
+sudo cp haproxy.cfg /etc/haproxy/haproxy.cfg
+
+
+sudo setsebool -P haproxy_connect_any 1
+sudo systemctl enable haproxy
+sudo systemctl start haproxy
+sudo systemctl status haproxy
+
+
+
+sudo firewall-cmd --permanent --add-port=6443/tcp
+sudo firewall-cmd --permanent --add-port=22623/tcp
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --permanent --add-service=https
+sudo firewall-cmd --reload
+
+
+sudo dnf install -y httpd
+
+
+sudo sed -i 's/Listen 80/Listen 8080/' /etc/httpd/conf/httpd.conf
+
+
+sudo setsebool -P httpd_read_user_content 1
+sudo systemctl enable httpd
+sudo systemctl start httpd
+sudo firewall-cmd --permanent --add-port=8080/tcp
+sudo firewall-cmd --reload
+
+
+curl localhost:8080
+
+
+cd
+wget https://github.com/openshift/okd/releases/download/4.5.0-0.okd-2020-07-29-070316/openshift-client-linux-4.5.0-0.okd-2020-07-29-070316.tar.gz
+wget https://github.com/openshift/okd/releases/download/4.5.0-0.okd-2020-07-29-070316/openshift-install-linux-4.5.0-0.okd-2020-07-29-070316.tar.gz
+
+
+
+tar -zxvf openshift-client-linux-4.5.0-0.okd-2020-07-29-070316.tar.gz
+tar -zxvf openshift-install-linux-4.5.0-0.okd-2020-07-29-070316.tar.gz
+
+
+sudo mv kubectl oc openshift-install /usr/local/bin/
+oc version
+openshift-install version
+
+
+The latest and recent releases are available at https://origin-release.svc.ci.openshift.org
+
+
+
+ssh-keygen
+
+
+cd
+mkdir install_dir
+cp okd4_files/install-config.yaml ./install_dir
+
+
+vim ./install_dir/install-config.yaml
+cp ./install_dir/install-config.yaml ./install_dir/install-config.yaml.bak
+
+
+openshift-install create manifests --dir=install_dir/
+
+
+sed -i 's/mastersSchedulable: true/mastersSchedulable: False/' install_dir/manifests/cluster-scheduler-02-config.yml
+
+
+openshift-install create ignition-configs --dir=install_dir/
+
+sudo mkdir /var/www/html/okd4
+
+
+sudo cp -R install_dir/* /var/www/html/okd4/
+sudo chown -R apache: /var/www/html/
+sudo chmod -R 755 /var/www/html/
+
+
+curl localhost:8080/okd4/metadata.json
+
+
+cd /var/www/html/okd4/
+sudo wget https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/32.20200715.3.0/x86_64/fedora-coreos-32.20200715.3.0-metal.x86_64.raw.xz
+sudo wget https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/32.20200715.3.0/x86_64/fedora-coreos-32.20200715.3.0-metal.x86_64.raw.xz.sig
+sudo mv fedora-coreos-32.20200715.3.0-metal.x86_64.raw.xz fcos.raw.xz
+sudo mv fedora-coreos-32.20200715.3.0-metal.x86_64.raw.xz.sig fcos.raw.xz.sig
+sudo chown -R apache: /var/www/html/
+sudo chmod -R 755 /var/www/html/
+
+
+coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://192.168.1.210:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://192.168.1.210:8080/okd4/bootstrap.ign
+
+
+coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://192.168.1.210:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://192.168.1.210:8080/okd4/master.ign
+
+
+coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://192.168.1.210:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://192.168.1.210:8080/okd4/worker.ign
+
+openshift-install --dir=install_dir/ wait-for bootstrap-complete --log-level=info
+
+sudo sed '/ okd4-bootstrap /s/^/#/' /etc/haproxy/haproxy.cfg
+sudo systemctl reload haproxy
+
+export KUBECONFIG=~/install_dir/auth/kubeconfig
+oc whoami
+oc get nodes
+oc get csr
+
+wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+chmod +x jq
+sudo mv jq /usr/local/bin/
+jq --version
+
+oc get csr -ojson | jq -r '.items[] | select(.status == {} ) | .metadata.name' | xargs oc adm certificate approve
+
+oc get clusteroperators
+
+
+cat install_dir/auth/kubeadmin-password
+
+Open your web browser to https://console-openshift-console.apps.lab.okd.local/ and login as kubeadmin with the password from above:
+
+
+sudo dnf install -y nfs-utils
+sudo systemctl enable nfs-server rpcbind
+sudo systemctl start nfs-server rpcbind
+sudo mkdir -p /var/nfsshare/registry
+sudo chmod -R 777 /var/nfsshare
+sudo chown -R nobody:nobody /var/nfsshare
+
+
+echo '/var/nfsshare 192.168.1.0/24(rw,sync,no_root_squash,no_all_squash,no_wdelay)' | sudo tee /etc/exports
+
+
+sudo setsebool -P nfs_export_all_rw 1
+sudo systemctl restart nfs-server
+sudo firewall-cmd --permanent --zone=public --add-service mountd
+sudo firewall-cmd --permanent --zone=public --add-service rpc-bind
+sudo firewall-cmd --permanent --zone=public --add-service nfs
+sudo firewall-cmd --reload
+
+
+oc create -f okd4_files/registry_pv.yaml
+oc get pv
+
+
+oc edit configs.imageregistry.operator.openshift.io
+
+
+managementState: Managed
+storage:
+    pvc:
+      claim:
+
+
+
+      oc get pv
+
+
+
+      du -sh /var/nfsshare/registry
+
+
+
+
+      oc new-project wordpress-test
+
+
+
+
+oc new-app centos/php-73-centos7~https://github.com/WordPress/WordPress.git
+oc expose svc/wordpress
+
+
+
+
+
+oc new-app centos/mariadb-103-centos7 --name mariadb --env MYSQL_DATABASE=wordpress --env MYSQL_USER=wordpress --env MYSQL_PASSWORD=wordpress
+
+
+
+cd
+cd okd4_files
+htpasswd -c -B -b users.htpasswd testuser testpassword
+
+
+
+oc create secret generic htpass-secret --from-file=htpasswd=users.htpasswd -n openshift-config
+
+
+oc apply -f htpasswd_provider.yaml
+
+
+
+oc adm policy add-cluster-role-to-user cluster-admin testuser
+
+
+OKD Github Repo: https://github.com/openshift/okd
