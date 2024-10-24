@@ -133,6 +133,9 @@ sudo chown -R apache: /var/www/html/
 sudo chmod -R 755 /var/www/html/
 
 
+https://builds.coreos.fedoraproject.org/browser
+
+
 coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://172.16.16.220:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://172.16.16.220:8080/okd4/bootstrap.ign
 
 
