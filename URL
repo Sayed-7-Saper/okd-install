@@ -133,13 +133,13 @@ sudo chown -R apache: /var/www/html/
 sudo chmod -R 755 /var/www/html/
 
 
-coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://192.168.1.210:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://192.168.1.210:8080/okd4/bootstrap.ign
+coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://172.16.16.220:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://172.16.16.220:8080/okd4/bootstrap.ign
 
 
-coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://192.168.1.210:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://192.168.1.210:8080/okd4/master.ign
+coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://172.16.16.220:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://172.16.16.220:8080/okd4/master.ign
 
 
-coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://192.168.1.210:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://192.168.1.210:8080/okd4/worker.ign
+coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://172.16.16.220:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://172.16.16.220:8080/okd4/worker.ign
 
 openshift-install --dir=install_dir/ wait-for bootstrap-complete --log-level=info
 
