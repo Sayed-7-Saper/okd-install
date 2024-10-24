@@ -20,5 +20,5 @@ $TTL    604800
 203    IN    PTR    okd4-control-3.lab.clync.com.
 204    IN    PTR    okd4-compute-1.lab.clync.com.
 205    IN    PTR    okd4-compute-2.lab.clync.com.
-210    IN    PTR    api.lab.clync.com.
-210    IN    PTR    api-int.lab.clync.com.
+220    IN    PTR    api.lab.clync.com.
+220    IN    PTR    api-int.lab.clync.com.
