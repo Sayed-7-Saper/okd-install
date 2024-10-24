@@ -134,6 +134,7 @@ sudo chmod -R 755 /var/www/html/
 
 
 https://builds.coreos.fedoraproject.org/browser
+https://builds.coreos.fedoraproject.org/prod/streams/testing-devel/builds/32.20200715.3.0/x86_64/fedora-coreos-32.20200715.3.0-live.x86_64.iso
 
 
 coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://172.16.16.220:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://172.16.16.220:8080/okd4/bootstrap.ign
