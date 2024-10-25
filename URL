@@ -11,7 +11,8 @@ sudo firewall-cmd --reload
 
 cd
 git clone https://github.com/cragr/okd4_files.git
-cd okd4_files
+git clone https://gitlab.ultratech-plus.com/ultratech/okd4-cluster/okd4-files.git
+cd okd4-files
 
 
 sudo dnf -y install bind bind-utils
