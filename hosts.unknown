@@ -1,0 +1,10 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+172.16.16.200	bootstrap
+172.16.16.220	services
+172.16.16.201	control-1
+172.16.16.202	control-2
+172.16.16.203	control-3
+172.16.16.204	compute-1
+172.16.16.205	compute-2
