@@ -1,30 +1,24 @@
 apiVersion: v1
-baseDomain: clync.com
-metadata:
-  name: okd4
-
+baseDomain: ocp.lan
 compute:
-- hyperthreading: Enabled
-  name: worker
-  replicas: 2
-
+  - hyperthreading: Enabled
+    name: worker
+    replicas: 0 # Must be set to 0 for User Provisioned Installation as worker nodes will be manually deployed.
 controlPlane:
   hyperthreading: Enabled
   name: master
   replicas: 3
-
+metadata:
+  name: lab # Cluster name
 networking:
   clusterNetwork:
-  - cidr: 10.128.0.0/14
-    hostPrefix: 23
-  networkType: OVNKubernetes
-  serviceNetwork: 
-  - 172.30.0.0/16
-
+    - cidr: 10.128.0.0/14
+      hostPrefix: 23
+  networkType: OpenShiftSDN
+  serviceNetwork:
+    - 172.30.0.0/16
 platform:
   none: {}
-
 fips: false
-
-pullSecret: '{"auths":{"cloud.openshift.com":{"auth":"b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K29jbV9hY2Nlc3NfZGUwNmQ5ZjBjYjIzNGNlZWFjMWYwZTY3YTQ5NzFjNDM6UU4zSUU4UkhNN0JUMkVWRTMwSEUxUE9CNU04UkJLVUQyNE1QUlVHVkVFQjlVQjdWRlkxTjM3U1ozNDZKUzRQWQ==","email":"amr.habashi@ultratech-plus.com"},"quay.io":{"auth":"b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K29jbV9hY2Nlc3NfZGUwNmQ5ZjBjYjIzNGNlZWFjMWYwZTY3YTQ5NzFjNDM6UU4zSUU4UkhNN0JUMkVWRTMwSEUxUE9CNU04UkJLVUQyNE1QUlVHVkVFQjlVQjdWRlkxTjM3U1ozNDZKUzRQWQ==","email":"amr.habashi@ultratech-plus.com"},"registry.connect.redhat.com":{"auth":"fHVoYy1wb29sLWUzYjEwMTY1LWRmOGEtNGY0OC04NTRlLTJhZDY4YzA3NTczNDpleUpoYkdjaU9pSlNVelV4TWlKOS5leUp6ZFdJaU9pSTRPVGcyWlRBME5EWXhOR1kwWTJabU9ERmxNVGhrTUdObU16ZzNZV1kwWVNKOS5ZT0tZaEd4RjFLUUtaVVgwUk8tazFKaUVlVUlWTTItc3VJcC1BckFLcm1jTHRWUjhtTDhheU5aMlZUZUJ5cVJCWGlUN3lVYTVOYmRpd0pMSThsVWZfN2o1b1VyTkJSYlEzX3U0dW56dkF1aUU3RjdJczZuc09TbENPYXAzU29PcWFsOVZtNnlIc0JBRld3ZlhKdTB4NWV0RHdydk9GYW8zcVFzT0w5R1hPWUNYS2d1ZWppRFUtR2UxbUZmWkpuN3VZVlRhRTRlOGIwQ1o3R01QS21DR1MyblVVZzhobmFqMS1xbGpzM3dWNUk2RmtZdjJrQ19qZlEwMWJuN21heVc3a29CeGtuZ2tPcVNpMFJtZjEwTG9NdDhrVkpqc1Vsc3hzazdweE9OYm1WTTVQRVdVVkFaQ2VaSGtkRjl2T19scDFGOUhwR1FDeEFoWFdZbXVDSVdRTXN4TlBaM1pNcW1BemVfOFVSdjVUWFhyTWxucGRLWjY1RUpiNTJseGY2VEtiMDZCaHZxZ1dDdnlLbnkzem9Uck9Kd3R3MTlpYUFmMGIxYlpBRE1qSS1JVGRHMnBhRGhaTkxiQ1IyZzhMaXFRVUFwZHJvVWcycklEczVqZ21DMEdzTktjVUN6eWI3clFKbDA2S2V1RGhVMVhYLUcyY1lnU3lvWjJUTy0zdlR4eVpNdHdzb1pTRXVLd2VPRlc5TTRMSWxIczdsOWZSS1piNFdxczJVa3E1QnBQUkxnZ0tFaDdjQnJkbWlPOWF5VE9iZEx6STkySThqUURNY3hna215WWc1U3Z5UHJlQldwV1o5LWc2T1Y1N2xHbmlUWnFRc3hfcHVWdmFKSk9zeXpQYmRadG5hcjNZd05QbHdGQkU2VGZKT2pDN0piTWRkRWhZdEI4SHVHZ1hvQQ==","email":"amr.habashi@ultratech-plus.com"},"registry.redhat.io":{"auth":"fHVoYy1wb29sLWUzYjEwMTY1LWRmOGEtNGY0OC04NTRlLTJhZDY4YzA3NTczNDpleUpoYkdjaU9pSlNVelV4TWlKOS5leUp6ZFdJaU9pSTRPVGcyWlRBME5EWXhOR1kwWTJabU9ERmxNVGhrTUdObU16ZzNZV1kwWVNKOS5ZT0tZaEd4RjFLUUtaVVgwUk8tazFKaUVlVUlWTTItc3VJcC1BckFLcm1jTHRWUjhtTDhheU5aMlZUZUJ5cVJCWGlUN3lVYTVOYmRpd0pMSThsVWZfN2o1b1VyTkJSYlEzX3U0dW56dkF1aUU3RjdJczZuc09TbENPYXAzU29PcWFsOVZtNnlIc0JBRld3ZlhKdTB4NWV0RHdydk9GYW8zcVFzT0w5R1hPWUNYS2d1ZWppRFUtR2UxbUZmWkpuN3VZVlRhRTRlOGIwQ1o3R01QS21DR1MyblVVZzhobmFqMS1xbGpzM3dWNUk2RmtZdjJrQ19qZlEwMWJuN21heVc3a29CeGtuZ2tPcVNpMFJtZjEwTG9NdDhrVkpqc1Vsc3hzazdweE9OYm1WTTVQRVdVVkFaQ2VaSGtkRjl2T19scDFGOUhwR1FDeEFoWFdZbXVDSVdRTXN4TlBaM1pNcW1BemVfOFVSdjVUWFhyTWxucGRLWjY1RUpiNTJseGY2VEtiMDZCaHZxZ1dDdnlLbnkzem9Uck9Kd3R3MTlpYUFmMGIxYlpBRE1qSS1JVGRHMnBhRGhaTkxiQ1IyZzhMaXFRVUFwZHJvVWcycklEczVqZ21DMEdzTktjVUN6eWI3clFKbDA2S2V1RGhVMVhYLUcyY1lnU3lvWjJUTy0zdlR4eVpNdHdzb1pTRXVLd2VPRlc5TTRMSWxIczdsOWZSS1piNFdxczJVa3E1QnBQUkxnZ0tFaDdjQnJkbWlPOWF5VE9iZEx6STkySThqUURNY3hna215WWc1U3Z5UHJlQldwV1o5LWc2T1Y1N2xHbmlUWnFRc3hfcHVWdmFKSk9zeXpQYmRadG5hcjNZd05QbHdGQkU2VGZKT2pDN0piTWRkRWhZdEI4SHVHZ1hvQQ==","email":"amr.habashi@ultratech-plus.com"}}}'
-sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDd0N3ajhqgG6i8sjEI7w/xrtC/wgw7a1yZOkx1wPfDwkCzl6WxdfrVq4KuJGmy4YuG8igBkUQrpXFOESsBNDgN8DlIiE9LYyWMvNTpVdzCgdyXzE6nvJGj+UzUfckH8q10/PFEBOq2caKa4JxAM1qd+93+kusfbrCvMnUQUe7OImwee6Ds44kdYUZ69Q1VGEmbL5lbx2uvcHOm98466Bs4wCZWukC6hVtihUaabQ/QCuRYlmhssx+a2Ncsel9ot/B6rWkbMfKXZ82b2eHcqtvr/h1dPUbNJ+e5simgexBGLPr/6q0rGoeuD5/ZW5PxSjLqHkOE156CdjwmujpyNLcMZN7GX/cSglnzX6t37k7bwhkrC6k/akkY+2FJBss/08sfo3775nvcyvKDAXEVFCgxLh4ONYfYRlz2lqsyq6IxWY6rwwgp8AMoNDnwryVuVRcC+NM9lIw1+1ff0573PVCnyNv7Vv0+EfQpikMWhNSeWAhv4G7ucM5SPKeUydkMqZ8= clync@services'
+pullSecret: '{"auths": ...}'
+sshKey: "ssh-ed25519 AAAA..."
